@@ -5,7 +5,6 @@ module TileCache
     class MapServer < TileCache::Layers::Base
       include Mapscript
       
-      # TODO: params needed?
       def initialize(name, config)
         super
         @map = MapObj.new(File.join(RAILS_ROOT, config[:mapfile]))

@@ -25,9 +25,13 @@ module TileCache
       def get_tile(bbox)
         coords = get_cell(bbox)
         tile = TileCache::Tile.new(self, *coords)        
+        cache = TileCache::Caches::DiskCache.new(tile)
         
-        tile.data = render(tile)
-          
+        unless cache.get!
+          tile.data = render(tile)
+          cache.store!
+        end
+        
         return tile
       end
       
