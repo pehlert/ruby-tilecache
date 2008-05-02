@@ -2,7 +2,7 @@ module TileCache
   module Layers
     require "mapscript"
     
-    class MapServer < TileCache::Layers::Base
+    class MapServer < TileCache::Layers::MetaBase
       include Mapscript
       
       def initialize(name, config)

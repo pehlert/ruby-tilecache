@@ -10,19 +10,27 @@ module TileCache
       
       def get!
         if File.exist?(@filename)
-          File.open(@filename, "r") { |f| @tile.data = f.read }          
+          File.open(@filename, File::RDONLY) { |f| @tile.data = f.read }          
           return true
         else
           return false
         end
       end
       
-      def store!
-        File.makedirs(File.dirname(@filename))
+      def store!(data = nil)
+        @tile.data = data if data
         
-        File.open(@filename, "wb") do |f|
-          f.write(@tile.data)
-        end       
+        if @tile.data
+          # Create the full path to the cache file
+          FileUtils.mkdir_p(File.dirname(@filename))
+          
+          File.open(@filename, (File::WRONLY | File::CREAT)) do |f|
+            f.sync = true
+            f.write(@tile.data)
+          end    
+        else
+          raise TileCache::CacheError, "Called #store! with no data argument and no data associated with the tile."   
+        end
       end
       
     protected

@@ -28,8 +28,8 @@ module TileCache
         cache = TileCache::Caches::DiskCache.new(tile)
         
         unless cache.get!
-          tile.data = render(tile)
-          cache.store!
+          data = render(tile)
+          cache.store!(data)
         end
         
         return tile

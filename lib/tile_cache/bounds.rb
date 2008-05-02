@@ -23,10 +23,11 @@ module TileCache
     
     # Returns this Bboxes resolution
     def resolution(width = 256, height = 256)
-      return [ (maxx - minx) / width,
-               (maxy - miny) / height].max
+      return [(maxx - minx) / width,
+              (maxy - miny) / height].max
     end
     
+    # Returns the maximum resolution possible for a given tile width and height
     def max_resolution(width = 256, height = 256)
       b_width  = (@maxx - @minx).to_f
       b_height = (@maxy - @miny).to_f

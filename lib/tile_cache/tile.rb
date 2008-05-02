@@ -1,6 +1,6 @@
 module TileCache
   class Tile
-    attr_reader :layer, :x, :y, :z
+    attr_reader :layer, :x, :y, :z, :size
     attr_accessor :data
     
     def initialize(layer, x, y, z)
@@ -19,6 +19,10 @@ module TileCache
       maxy = @layer.bbox.miny + (res * (@y + 1) * @layer.size[1])
       
       return TileCache::Bounds.new(minx, miny, maxx, maxy)
+    end
+    
+    def size
+      @layer.size
     end
   end
 end
