@@ -10,7 +10,8 @@ module TileCache
       def get
         bbox = TileCache::Bounds.from_string(@params[:bbox])
         layer = get_layer(@params[:layers])
-        layer.get_tile(bbox)
+        tile = layer.get_tile(bbox)
+        layer.render(tile)
       end
       
     private

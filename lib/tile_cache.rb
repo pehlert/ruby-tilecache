@@ -7,7 +7,9 @@ module TileCache
     :description => "",
     :size => [256, 256],
     :levels => 20,
-    :extension => "png"
+    :extension => "png",
+    :metatile => false,
+    :metasize => [5, 5]
   }
   
   class InvalidBounds < StandardError; end

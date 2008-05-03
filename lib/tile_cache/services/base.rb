@@ -29,7 +29,7 @@ module TileCache
         end  
         
         if config[name.to_s]
-          layer_config = config[name.to_s].with_indifferent_access
+          layer_config = config[name.to_s].symbolize_keys
           layer_config.reverse_merge(TileCache::DEFAULT_LAYER_CONFIGURATION).with_indifferent_access
         end
       end
@@ -42,7 +42,7 @@ module TileCache
         begin
           TileCache::Layers.const_get(class_name)
         rescue NameError
-          raise TileCache::InvalidConfiguration, "Invalid type attribute: #{config[:type]}"
+          raise TileCache::InvalidConfiguration, "Invalid type attribute: #{type}"
         end
       end
     end

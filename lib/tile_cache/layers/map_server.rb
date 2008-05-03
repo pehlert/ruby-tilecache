@@ -2,7 +2,7 @@ module TileCache
   module Layers
     require "mapscript"
     
-    class MapServer < TileCache::Layers::MetaBase
+    class MapServer < TileCache::MetaLayer
       include Mapscript
       
       def initialize(name, config)
@@ -10,7 +10,7 @@ module TileCache
         @map = MapObj.new(File.join(RAILS_ROOT, config[:mapfile]))
       end
       
-      def render(tile)
+      def render_tile(tile)
         req = build_request(tile)
         
         msIO_installStdoutToBuffer
@@ -24,8 +24,8 @@ module TileCache
         req = OWSRequest.new
         
         req.setParameter("bbox", tile.bounds.to_s)
-        req.setParameter("width", @size[0].to_s)
-        req.setParameter("height", @size[1].to_s)
+        req.setParameter("width", tile.size[0].to_s)
+        req.setParameter("height", tile.size[1].to_s)
         req.setParameter("srs", @srs)
         req.setParameter("format", format)
         req.setParameter("layers", @layers)
