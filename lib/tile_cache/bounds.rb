@@ -13,7 +13,7 @@ module TileCache
       @maxy = maxy
         
       if (minx > maxx) || (miny > maxy)
-        raise InvalidBounds, "Invalid Bounds: #{self}"
+        raise TileCache::InvalidBounds, "Invalid Bounds: #{self}"
       end
     end
     

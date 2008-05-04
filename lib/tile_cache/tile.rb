@@ -12,7 +12,7 @@ module TileCache
     end
     
     def bounds
-      res = @layer.resolutions[self.z]
+      res = @layer.resolutions[@z]
       minx = @layer.bbox.minx + (res * @x * @layer.size[0])
       miny = @layer.bbox.miny + (res * @y * @layer.size[1])
       maxx = @layer.bbox.minx + (res * (@x + 1) * @layer.size[0])

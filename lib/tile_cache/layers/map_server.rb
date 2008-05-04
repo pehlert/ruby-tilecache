@@ -11,6 +11,7 @@ module TileCache
       end
       
       def render_tile(tile)
+        set_metabuffer if @metabuffer
         req = build_request(tile)
         
         msIO_installStdoutToBuffer
@@ -20,9 +21,19 @@ module TileCache
       end
       
     protected
+      def set_metabuffer
+        # Don't override the mapfile settings!
+        begin
+          @map.getMetaData("labelcache_map_edge_buffer")
+        rescue
+          buffer = -@metabuffer.max - 5
+          @map.setMetaData("labelcache_map_edge_buffer", buffer.to_s)
+        end
+      end
+      
       def build_request(tile)
         req = OWSRequest.new
-        
+                
         req.setParameter("bbox", tile.bounds.to_s)
         req.setParameter("width", tile.size[0].to_s)
         req.setParameter("height", tile.size[1].to_s)
