@@ -39,6 +39,20 @@ module TileCache
       return tile
     end  
     
+    def render_bbox(bbox)
+      case bbox
+      when String
+        bounds = Bounds.from_string(bbox)
+      when Bounds
+        bounds = bbox
+      else
+        raise ArgumentError, "Invalid argument for bbox: #{bbox.inspect}"
+      end
+      
+      tile = get_tile(bounds)
+      render(tile)
+    end
+    
     
     # This returns the total number of columns and rows of the grid, 
     # based on the given z-indexes resolution
