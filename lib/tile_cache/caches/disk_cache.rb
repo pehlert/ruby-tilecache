@@ -1,6 +1,6 @@
 module TileCache
   module Caches
-    class DiskCache < TileCache::Caches::Base
+    class DiskCache
       def initialize(tile)
         @filename = key_for_tile(tile)
         @tile = tile

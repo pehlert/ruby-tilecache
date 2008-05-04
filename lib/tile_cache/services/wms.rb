@@ -1,15 +1,15 @@
 module TileCache
   module Services
-    class WMS < TileCache::Services::Base
+    class WMS
       FIELDS = %{ bbox srs width height format layers styles }
       
       def initialize(params)
         @params = parse_request(params)
       end
       
-      def get
+      def get_map
         bbox = TileCache::Bounds.from_string(@params[:bbox])
-        layer = get_layer(@params[:layers])
+        layer = TileCache::LayersPool.get(@params[:layers])
         tile = layer.get_tile(bbox)
         layer.render(tile)
       end

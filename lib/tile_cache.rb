@@ -1,6 +1,22 @@
+require 'tile_cache/bounds'
+
+require 'tile_cache/layers_pool'
+require 'tile_cache/layer'
+require 'tile_cache/meta_layer'
+
+require 'tile_cache/tile'
+require 'tile_cache/meta_tile'
+
+require 'tile_cache/layers/map_server'
+
+require 'tile_cache/caches/disk_cache'
+
+require 'tile_cache/services/wms'
+
 module TileCache
   CACHE_ROOT = File.join(RAILS_ROOT, 'tmp', 'mapcache')
   CONFIG_ROOT = File.join(RAILS_ROOT, 'config', 'tilecache')
+  
   DEFAULT_LAYER_CONFIGURATION = {
     :bbox => [-180, -90, 180, 90],
     :srs => "EPSG:4326",
