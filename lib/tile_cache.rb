@@ -8,8 +8,8 @@ require 'tile_cache/layer'
 require 'tile_cache/meta_layer'
 require 'tile_cache/config_parser'
 require 'tile_cache/services'
-
-module TileCache
+  
+module TileCache    
   CONFIG_FILE = File.join(RAILS_ROOT, 'config', 'tilecache.yml')
   SETTINGS = ConfigParser.instance
   
@@ -19,3 +19,4 @@ module TileCache
   class CacheError < StandardError; end
   class LayerNotFound < StandardError; end
 end
+
