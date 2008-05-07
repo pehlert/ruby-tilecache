@@ -7,10 +7,10 @@ module TileCache
     end
     
     def initialize(minx = -180, miny = -90, maxx = 180, maxy = 90)
-      @minx = minx
-      @miny = miny
-      @maxx = maxx
-      @maxy = maxy
+      @minx = Float(minx)
+      @miny = Float(miny)
+      @maxx = Float(maxx)
+      @maxy = Float(maxy)
         
       if (minx > maxx) || (miny > maxy)
         raise TileCache::InvalidBounds, "Invalid Bounds: #{self}"

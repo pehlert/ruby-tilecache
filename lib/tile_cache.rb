@@ -1,33 +1,17 @@
+$:.unshift(File.dirname(__FILE__)) unless
+  $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
+
 require 'tile_cache/bounds'
-
-require 'tile_cache/layers_pool'
-require 'tile_cache/layer'
-require 'tile_cache/meta_layer'
-
 require 'tile_cache/tile'
 require 'tile_cache/meta_tile'
-
-require 'tile_cache/layers/map_server'
-
-require 'tile_cache/caches/disk_cache'
-
-require 'tile_cache/services/wms'
+require 'tile_cache/layer'
+require 'tile_cache/meta_layer'
+require 'tile_cache/config_parser'
+require 'tile_cache/services'
 
 module TileCache
-  CACHE_ROOT = File.join(RAILS_ROOT, 'tmp', 'mapcache')
-  CONFIG_ROOT = File.join(RAILS_ROOT, 'config', 'tilecache')
-  
-  DEFAULT_LAYER_CONFIGURATION = {
-    :bbox => [-180, -90, 180, 90],
-    :srs => "EPSG:4326",
-    :description => "",
-    :size => [256, 256],
-    :levels => 20,
-    :extension => "png",
-    :metatile => false,
-    :metasize => [5, 5],
-    :metabuffer => [10, 10]
-  }
+  CONFIG_FILE = File.join(RAILS_ROOT, 'config', 'tilecache.yml')
+  SETTINGS = ConfigParser.instance
   
   class InvalidBounds < StandardError; end
   class InvalidResolution < StandardError; end

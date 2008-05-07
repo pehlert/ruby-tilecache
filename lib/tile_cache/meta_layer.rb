@@ -5,7 +5,7 @@ module TileCache
     
     attr_reader :metabuffer
     
-    def initialize(name, config)
+    def initialize(config)
       super
       
       @metatile = [true, 1, "true", "yes", "1"].include?(config[:metatile])
@@ -16,20 +16,20 @@ module TileCache
     # Columns and rows for a given z-indexes resolution.
     # Returns 1,1 if meta-tiling is disabled, otherwise the desired metasize or grid limits.
     def meta_limits(z)
-      if @metatile
-        limits = grid_limits(z)
-        maxcols = [@metasize[0], limits[0] + 1].min
-        maxrows = [@metasize[1], limits[1] + 1].min
-        return [maxcols, maxrows]
-      else
-        return [1, 1]
-      end
+      return [1, 1] unless @metatile
+      
+      limits = grid_limits(z)
+      maxcols = [@metasize[0], limits[0] + 1].min
+      maxrows = [@metasize[1], limits[1] + 1].min
+      
+      [maxcols, maxrows]
     end
     
     def get_meta_tile(tile)
       x = (tile.x / @metasize[0]).to_i
       y = (tile.y / @metasize[1]).to_i
-      return MetaTile.new(self, x, y, tile.z)
+      
+      MetaTile.new(self, x, y, tile.z)
     end
     
     def render_meta_tile(metatile, tile)
@@ -48,8 +48,7 @@ module TileCache
           x = metatile.x * @metasize[0] + c
           y = metatile.y * @metasize[1] + r
           subtile = TileCache::Tile.new(self, x, y, metatile.z)
-          cache = TileCache::Caches::DiskCache.new(subtile)
-          cache.store!(subimage.to_blob) rescue raise [image, minx, miny].inspect
+          SETTINGS.cache.store(subtile, subimage.to_blob) rescue raise [image, minx, miny].inspect
           
           if x == tile.x && y == tile.y
             tile.data = subimage.to_blob
@@ -63,9 +62,9 @@ module TileCache
     def render(tile)
       if @metatile
         metatile = get_meta_tile(tile)        
-        cache = TileCache::Caches::DiskCache.new(tile)
+        cache = SETTINGS.cache
         
-        unless cache.get!
+        unless cache.get(tile)
           render_meta_tile(metatile, tile)
         end
             

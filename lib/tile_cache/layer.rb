@@ -1,11 +1,23 @@
 module TileCache
   class Layer
+    DEFAULT_CONFIGURATION = {
+      :bbox => [-180, -90, 180, 90],
+      :srs => "EPSG:4326",
+      :description => "",
+      :size => [256, 256],
+      :levels => 20,
+      :extension => "png",
+      :metatile => false,
+      :metasize => [5, 5],
+      :metabuffer => [10, 10]
+    }
+    
     attr_reader :name, :config, :description, :layers, :bbox, :size, :units, :srs, :extension, :resolutions
     
-    def initialize(name, config)
+    def initialize(config)
       @config = config
-              
-      @name = name
+
+      @name = config[:name]
       @description = config[:description]
       @layers = config[:layers] || name
       @bbox = config[:bbox].is_a?(String) ? TileCache::Bounds.from_string(config[:bbox]) : TileCache::Bounds.new(*config[:bbox])
@@ -15,8 +27,6 @@ module TileCache
       
       @extension = config[:extension].downcase
       @extension = 'jpeg' if @extension == 'jpg'
-      
-      @cache = config[:cache]
       
       @resolutions = parse_resolutions
     end
@@ -29,11 +39,11 @@ module TileCache
     
     # Fetch or render tile 
     def render(tile)
-      cache = TileCache::Caches::DiskCache.new(tile)
+      cache = SETTINGS.cache
 
-      unless cache.get!
+      unless cache.get(tile)
         data = render_tile(tile)
-        cache.store!(data)
+        cache.store(tile, data)
       end
       
       return tile

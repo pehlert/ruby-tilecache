@@ -1,11 +1,14 @@
+require 'mapscript'
+
 module TileCache
-  module Layers
-    require "mapscript"
-    
+  module Layers    
     class MapServer < TileCache::MetaLayer
+      VALID_ATTRIBUTES = %w{ maxresolution levels extension metatile metabuffer bbox resolutions width height }
+      REQUIRED_ATTRIBUTES = %w{ mapfile layers }
+      
       include Mapscript
       
-      def initialize(name, config)
+      def initialize(config)
         super
         @map = MapObj.new(File.join(RAILS_ROOT, config[:mapfile]))
       end
