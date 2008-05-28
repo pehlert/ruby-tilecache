@@ -11,7 +11,7 @@ because of the tiling.
 
 == FEATURES/PROBLEMS
 
-* Currently only works in Rails environments!
+* See description.
 
 == SYNOPSIS
 
@@ -58,6 +58,8 @@ As the name suggests, the file format should be YAML, here is an example configu
     metatile: true
     metabuffer: 0, 0
     bbox: -87.6903, 10.7075, -82.5921, 15.0259
+
+In a Rails environment relative paths always refer to RAILS_ROOT, in other environments you should use absolute paths.
 
 == LICENSE
 
