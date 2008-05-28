@@ -9,7 +9,7 @@ module TileCache
       
       def get_map
         bbox = TileCache::Bounds.from_string(@params[:bbox])        
-        layer = SETTINGS.layers[@params[:layers]]
+        layer = ConfigParser.instance.layers[@params[:layers]]
         tile = layer.get_tile(bbox)
         
         layer.render(tile)

@@ -9,14 +9,18 @@ require 'tile_cache/meta_layer'
 require 'tile_cache/config_parser'
 require 'tile_cache/services'
   
-module TileCache    
-  CONFIG_FILE = File.join(RAILS_ROOT, 'config', 'tilecache.yml')
-  SETTINGS = ConfigParser.instance
-  
+module TileCache  
+  # Exception classes
   class InvalidBounds < StandardError; end
   class InvalidResolution < StandardError; end
   class InvalidConfiguration < StandardError; end
   class CacheError < StandardError; end
   class LayerNotFound < StandardError; end
+  
+  CONFIG_PATHS = []
+  CONFIG_PATHS << File.join(RAILS_ROOT, 'config', 'tilecache.yml') if ENV["RAILS_ENV"]
+  CONFIG_PATHS << File.join(ENV["HOME"], ".tilecache.yml")
+  CONFIG_PATHS << "/etc/tilecache.yml"
 end
+
 

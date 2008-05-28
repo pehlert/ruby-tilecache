@@ -1,4 +1,5 @@
 require 'singleton'
+require 'yaml'
 
 require 'tile_cache/caches'
 require 'tile_cache/layers'
@@ -15,9 +16,13 @@ module TileCache
     end
   
   private
+    def find_config_file
+      CONFIG_PATHS.find { |f| File.exists?(f) }
+    end
+    
     def read_config_file
       begin
-        YAML.load(File.read(CONFIG_FILE)).symbolize_keys
+        YAML.load(File.read(find_config_file)).symbolize_keys
       rescue => e
         raise InvalidConfiguration, "Can't read configuration file: #{e.message}"
       end

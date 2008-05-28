@@ -1,6 +1,8 @@
+require 'rubygems'
+require 'RMagick'
+
 module TileCache
   class MetaLayer < TileCache::Layer
-    require 'RMagick'
     include Magick
     
     attr_reader :metabuffer
@@ -48,7 +50,7 @@ module TileCache
           x = metatile.x * @metasize[0] + c
           y = metatile.y * @metasize[1] + r
           subtile = TileCache::Tile.new(self, x, y, metatile.z)
-          SETTINGS.cache.store(subtile, subimage.to_blob) rescue raise [image, minx, miny].inspect
+          ConfigParser.instance.cache.store(subtile, subimage.to_blob) rescue raise [image, minx, miny].inspect
           
           if x == tile.x && y == tile.y
             tile.data = subimage.to_blob
@@ -62,7 +64,7 @@ module TileCache
     def render(tile)
       if @metatile
         metatile = get_meta_tile(tile)        
-        cache = SETTINGS.cache
+        cache = ConfigParser.instance.cache
         
         unless cache.get(tile)
           render_meta_tile(metatile, tile)

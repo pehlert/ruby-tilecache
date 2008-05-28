@@ -39,7 +39,7 @@ module TileCache
     
     # Fetch or render tile 
     def render(tile)
-      cache = SETTINGS.cache
+      cache = ConfigParser.instance.cache
 
       unless cache.get(tile)
         data = render_tile(tile)

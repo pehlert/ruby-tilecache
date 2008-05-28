@@ -1,9 +1,7 @@
-.DS_Store
 HISTORY
 MANIFEST
 README.rdoc
 Rakefile
-lib/.DS_Store
 lib/tile_cache.rb
 lib/tile_cache/bounds.rb
 lib/tile_cache/caches.rb

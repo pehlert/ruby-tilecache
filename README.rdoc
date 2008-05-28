@@ -2,27 +2,64 @@ Ruby-TileCache
     by Pascal Ehlert, ODAdata
     http://ruby-tilecache.rubyforge.org
 
-== DESCRIPTION:
+== DESCRIPTION
 
-FIXME (describe your package)
+ruby-tilecache is an implementation of TileCache from MetaCarta, written in pure Ruby.
+It allows you to cache image tiles either rendered by MapScript or taken from another source.
+Additionally, it supports meta-tiling which nearly eliminates label duplication issues
+because of the tiling. 
 
-== FEATURES/PROBLEMS:
+== FEATURES/PROBLEMS
 
-* FIXME (list of features or problems)
+* Currently only works in Rails environments!
 
-== SYNOPSIS:
+== SYNOPSIS
 
-  FIXME (code sample of usage)
+  require 'tile_cache'
 
-== REQUIREMENTS:
+  class MapController < ApplicationController
 
-* FIXME (list of requirements)
+  	# This action handles WMS GetMap requests
+  	def wms
+   	  wms = TileCache::Services::WMS.new(params)
+      map = wms.get_map
 
-== INSTALL:
+      render :text => map.data, :content_type => map.layer.format
+    end
+  end
 
-* FIXME (sudo gem install, anything else)
+== REQUIREMENTS
 
-== LICENSE:
+* RMagick for meta-tiling support
+* Ruby-MapScript for Mapserver layers
+
+== INSTALL
+
+* sudo gem install ruby-mapscript
+
+== CONFIGURATION
+
+If you are in a Rails environment, ruby-tilecache looks for a configuration file in config/tilecache.yml,
+otherwise it searches ~/.tilecache.yml and /etc/tilecache.yml.
+
+As the name suggests, the file format should be YAML, here is an example configuration:
+  
+  cache:
+    type: DiskCache
+    root: '../tmp/mapcache'
+
+  basic:
+    type: MapServer
+    mapfile: app/map/nic.map
+    layers: NIC2,NIC1
+    maxresolution: 0.01991484375
+    levels: 5
+    extension: jpeg
+    metatile: true
+    metabuffer: 0, 0
+    bbox: -87.6903, 10.7075, -82.5921, 15.0259
+
+== LICENSE
 
 Copyright (c) 2008 Pascal Ehlert, ODAdata
 
