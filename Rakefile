@@ -1,22 +1,14 @@
-# Look in the tasks/setup.rb file for the various options that can be
-# configured in this Rakefile. The .rake files in the tasks directory
-# are where the options are used.
+require 'rubygems'
+require 'rake'
+require 'echoe'
 
-load 'tasks/setup.rb'
+Echoe.new('ruby-tilecache', '0.0.2') do |p|
+  p.description     = "An implementation of TileCache from MetaCarta, written in pure Ruby"
+  p.url             = "http://www.odadata.eu/ruby-tilecache"
+  p.author          = "Pascal Ehlert"
+  p.email           = "pascal.ehlert@odadata.eu"
+  p.ignore_pattern  = []
+  p.development_dependencies = []
+end
 
-ensure_in_path 'lib'
-require 'tile_cache/version.rb'
-
-task :default => 'spec:run'
-
-PROJ.name = 'ruby-tilecache'
-PROJ.authors = 'Pascal Ehlert, ODAdata'
-PROJ.email = 'pascal.ehlert@odadata.eu'
-PROJ.url = 'http://ruby-tilecache.rubyforge.org'
-PROJ.rubyforge.name = 'ruby-tilecache'
-PROJ.version = TileCache::VERSION::STRING
-PROJ.spec.opts << '--color'
-
-PROJ.gem.dependencies = ['activesupport'] 
-
-# EOF
+Dir["#{File.dirname(__FILE__)}/tasks/*.rake"].sort.each { |ext| load ext }
