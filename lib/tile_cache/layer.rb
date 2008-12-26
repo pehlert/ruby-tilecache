@@ -1,3 +1,6 @@
+require 'tile_cache/tile'
+require 'tile_cache/meta_tile'
+
 module TileCache
   class Layer
     DEFAULT_CONFIGURATION = {
@@ -12,15 +15,13 @@ module TileCache
       :metabuffer => [10, 10]
     }
     
-    attr_reader :name, :config, :description, :layers, :bbox, :size, :units, :srs, :extension, :resolutions
+    attr_reader :name, :description, :layers, :bbox, :size, :units, :srs, :extension, :resolutions
     
-    def initialize(config)
-      @config = config
-
-      @name = config[:name]
+    def initialize(name, config)
+      @name = name
       @description = config[:description]
       @layers = config[:layers] || name
-      @bbox = config[:bbox].is_a?(String) ? TileCache::Bounds.from_string(config[:bbox]) : TileCache::Bounds.new(*config[:bbox])
+      @bbox = config[:bbox].is_a?(String) ? TileCache::Bounds.parse_string(config[:bbox]) : TileCache::Bounds.new(*config[:bbox])
       @size = config[:size].is_a?(String) ? config[:size].split(",").map { |s| Integer(s.strip) } : config[:size].map { |s| s.to_i }
       @units = config[:units]
       @srs = config[:srs]
@@ -28,7 +29,7 @@ module TileCache
       @extension = config[:extension].downcase
       @extension = 'jpeg' if @extension == 'jpg'
       
-      @resolutions = parse_resolutions
+      @resolutions = parse_resolutions(config[:resolutions], config[:minresolution], config[:maxresolution], config[:levels])
     end
     
     # Create a new tile for the given bounds
@@ -52,7 +53,7 @@ module TileCache
     def render_bbox(bbox)
       case bbox
       when String
-        bounds = Bounds.from_string(bbox)
+        bounds = Bounds.parse_string(bbox)
       when Bounds
         bounds = bbox
       else
@@ -103,15 +104,15 @@ module TileCache
     
   private
     # Calculate resolutions unless given via configuration
-    def parse_resolutions
-      case @config[:resolutions]
+    def parse_resolutions(res_list, min_res, max_res, levels)
+      case res_list
       when String
-        @config[:resolutions].split(",").map { |r| Float(r.strip) }
+        res_list.split(",").map { |r| Float(r.strip) }
       when Array
-        @config[:resolutions].map { |r| Float(r) }
+        res_list.map { |r| Float(r) }
       when NilClass
-        max_res = @config[:maxresolution].nil? ? @bbox.max_resolution(*@size) : @config[:maxresolution].to_f
-        (0..@config[:levels]).map { |i| max_res / 2 ** i }
+        max_res ||= @bbox.max_resolution(*@size)
+        (0..levels).map { |i| max_res.to_f / 2 ** i }
       else
         raise TileCache::Layers::InvalidConfiguration, "Invalid format of resolutions for layer #{@name}"
       end

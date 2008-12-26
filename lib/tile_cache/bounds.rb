@@ -2,7 +2,7 @@ module TileCache
   class Bounds
     attr_reader :minx, :miny, :maxx, :maxy
     
-    def self.from_string(str)
+    def self.parse_string(str)
       new(*str.split(",").map { |s| Float(s.strip) })
     end
     
@@ -29,8 +29,8 @@ module TileCache
     
     # Returns the maximum resolution possible for a given tile width and height
     def max_resolution(width = 256, height = 256)
-      b_width  = (@maxx - @minx).to_f
-      b_height = (@maxy - @miny).to_f
+      b_width  = (maxx - minx).to_f
+      b_height = (maxy - miny).to_f
       
       if b_width >= b_height
         aspect = (b_width / b_height).ceil

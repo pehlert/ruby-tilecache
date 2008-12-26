@@ -7,7 +7,7 @@ module TileCache
     
     attr_reader :metabuffer
     
-    def initialize(config)
+    def initialize(name, config)
       super
       
       @metatile = [true, 1, "true", "yes", "1"].include?(config[:metatile])
@@ -50,7 +50,7 @@ module TileCache
           x = metatile.x * @metasize[0] + c
           y = metatile.y * @metasize[1] + r
           subtile = TileCache::Tile.new(self, x, y, metatile.z)
-          ConfigParser.instance.cache.store(subtile, subimage.to_blob) rescue raise [image, minx, miny].inspect
+          TileCache.cache.store(subtile, subimage.to_blob)
           
           if x == tile.x && y == tile.y
             tile.data = subimage.to_blob
@@ -64,9 +64,8 @@ module TileCache
     def render(tile)
       if @metatile
         metatile = get_meta_tile(tile)        
-        cache = ConfigParser.instance.cache
         
-        unless cache.get(tile)
+        unless TileCache.cache.get(tile)
           render_meta_tile(metatile, tile)
         end
             

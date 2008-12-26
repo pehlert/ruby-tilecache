@@ -8,8 +8,10 @@ module TileCache
       end
       
       def get_map
-        bbox = TileCache::Bounds.from_string(@params[:bbox])        
-        layer = ConfigParser.instance.layers[@params[:layers]]
+        bbox = Bounds.parse_string(@params[:bbox])        
+        layer = TileCache.layers[@params[:layers]]
+        # TODO: Move into config parser
+        raise LayerNotFound, "Can't find layer '#{@params[:layers]}' in configuration" unless layer
         tile = layer.get_tile(bbox)
         
         layer.render(tile)
