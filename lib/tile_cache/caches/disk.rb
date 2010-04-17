@@ -2,12 +2,17 @@ module TileCache
   module Caches
     class Disk
       REQUIRED_ATTRIBUTES = %w{ root }
+      VALID_ATTRIBUTES = %w{ debug }
       
       def initialize(settings)
         @root = settings[:root]
+        @debug = settings[:debug]
       end
       
       def get(tile)
+        # If we are in debug mode, always simulate cache misses to force rewriting the cache every time
+        return false if @debug
+        
         file = key_for_tile(tile)
         
         if File.exist?(file)

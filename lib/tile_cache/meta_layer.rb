@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'RMagick'
 
 module TileCache
@@ -35,8 +34,13 @@ module TileCache
     end
     
     def render_meta_tile(metatile, tile)
-      data = render_tile(metatile)
-      image = Image.from_blob(data).first
+      # TODO: Better debugging and logging support here.. data may not be an image but an XML error document!
+      begin
+        data = render_tile(metatile)
+        image = Image.from_blob(data).first
+      rescue => e
+        raise "#{e.message} (data: #{data.inspect})"
+      end
       
       (meta_cols, meta_rows) = meta_limits(metatile.z)
       meta_height = meta_rows * @size[1] + 2 * @metabuffer[1]
